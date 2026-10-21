@@ -1,0 +1,304 @@
+/*
+ * design-tokens.css — 设计令牌（Design Tokens）起步文件
+ * 来源与说明：dev-guide/docs/07-design-system/02-tokens.md
+ *
+ * 用法（Tailwind CSS v4）：
+ *   src/styles/app.css 中：
+ *     @import "tailwindcss";
+ *     @import "./design-tokens.css";
+ * 不用 Tailwind 时：直接在入口 CSS 里 @import 本文件，删掉末尾的 @theme 区块即可。
+ *
+ * 规则：
+ * - 组件里只用"语义令牌"（--color-text、--color-accent…），不要直接写色值。
+ * - 改颜色后必须重新核对对比度（见 02-tokens.md 的对比度表）。
+ * - 色值是本仓库为通用项目选的默认值，不是 Apple 官方色值；品牌色可替换，但对比度要求不变。
+ */
+
+/* ========== 1. 浅色（默认） ========== */
+:root {
+  color-scheme: light dark; /* 让原生控件、滚动条随浅色/深色切换 */
+
+  /* 背景层级：canvas（页面）< surface（卡片、列表）< elevated（弹窗、菜单） */
+  --ds-canvas: #f5f5f7;
+  --ds-surface: #ffffff;
+  --ds-elevated: #ffffff;
+  --ds-sunken: #ebebef;          /* 输入框内底、代码块、表头等"凹陷"区域 */
+
+  /* 文字 */
+  --ds-text: #1d1d1f;            /* 主要文字：对 surface 16.8:1 */
+  --ds-text-secondary: #55555c;  /* 次要文字：对 surface 7.4:1 */
+  --ds-text-tertiary: #6b6b72;   /* 提示、占位符：对 surface 5.3:1，对 canvas 4.9:1 */
+
+  /* 线 */
+  --ds-separator: #e3e3e8;       /* 装饰性分隔线（不承载信息） */
+  --ds-border-control: #8a8a91;  /* 输入框/复选框边框：对 surface 3.4:1（WCAG 1.4.11 要求 ≥3:1） */
+
+  /* 强调色（品牌色）：文字/图标用 --ds-accent，实心按钮背景用 --ds-accent-bg */
+  --ds-accent: #0062cc;
+  --ds-accent-bg: #0062cc;
+  --ds-accent-bg-hover: #0052ab;
+  --ds-on-accent: #ffffff;       /* 实心按钮上的文字：5.8:1 */
+  --ds-accent-soft: #e6f0fb;     /* 选中行、浅色徽标底 */
+
+  /* 状态色：必须同时配文字或图标，不能只靠颜色（WCAG 1.4.1） */
+  --ds-danger: #c41e1e;
+  --ds-danger-bg: #c41e1e;
+  --ds-on-danger: #ffffff;
+  --ds-danger-soft: #fdecec;
+  --ds-success: #1a7a36;
+  --ds-success-soft: #e8f5ec;
+  --ds-warning: #8f5c00;
+  --ds-warning-soft: #fdf3e1;
+
+  /* 焦点环 */
+  --ds-focus-ring: #0062cc;
+
+  /* 遮罩 */
+  --ds-scrim: rgb(0 0 0 / 0.4);
+
+  /* 阴影：浅色模式靠阴影表达层级 */
+  --ds-shadow-1: 0 1px 2px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.08);
+  --ds-shadow-2: 0 4px 12px rgb(0 0 0 / 0.10);
+  --ds-shadow-3: 0 12px 32px rgb(0 0 0 / 0.16);
+}
+
+/* ========== 2. 深色：跟随系统 ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 深色不是简单反色：背景更暗，越"靠前"的层越亮（elevated > surface > canvas） */
+    --ds-canvas: #111113;
+    --ds-surface: #1c1c1f;
+    --ds-elevated: #2a2a2e;
+    --ds-sunken: #0b0b0c;
+
+    --ds-text: #f5f5f7;            /* 对 surface 15.6:1 */
+    --ds-text-secondary: #b4b4bb;  /* 对 surface 8.3:1，对 elevated 6.9:1 */
+    --ds-text-tertiary: #9a9aa2;   /* 对 elevated 5.1:1 */
+
+    --ds-separator: #323236;
+    --ds-border-control: #7c7c84;  /* 对 elevated 3.4:1 */
+
+    --ds-accent: #5aa9ff;          /* 深色背景上的链接/图标：对 elevated 5.8:1 */
+    --ds-accent-bg: #1f6fd6;       /* 白字 4.9:1；与 surface 3.5:1 */
+    --ds-accent-bg-hover: #1a63c2;
+    --ds-on-accent: #ffffff;
+    --ds-accent-soft: #15263b;
+
+    --ds-danger: #ff6b6b;
+    --ds-danger-bg: #c42b2b;
+    --ds-on-danger: #ffffff;
+    --ds-danger-soft: #3a1717;
+    --ds-success: #4cc472;
+    --ds-success-soft: #132c1b;
+    --ds-warning: #e0a53a;
+    --ds-warning-soft: #33270f;
+
+    --ds-focus-ring: #5aa9ff;
+    --ds-scrim: rgb(0 0 0 / 0.6);
+
+    /* 深色模式阴影几乎看不见，层级主要靠更亮的背景（--ds-elevated）+ 细边框表达 */
+    --ds-shadow-1: 0 0 0 1px rgb(255 255 255 / 0.06);
+    --ds-shadow-2: 0 0 0 1px rgb(255 255 255 / 0.08), 0 4px 12px rgb(0 0 0 / 0.5);
+    --ds-shadow-3: 0 0 0 1px rgb(255 255 255 / 0.10), 0 12px 32px rgb(0 0 0 / 0.6);
+  }
+}
+
+/* ========== 3. 用户要求更高对比度 ========== */
+@media (prefers-contrast: more) {
+  :root {
+    --ds-text-secondary: var(--ds-text);
+    --ds-text-tertiary: var(--ds-text);
+    --ds-separator: var(--ds-border-control);
+  }
+}
+
+/* ========== 4. 与颜色无关的令牌 ========== */
+:root {
+  /* 字体：只用系统字体栈，不打包 SF Pro（许可证不允许用于网页，见 02-tokens.md） */
+  --ds-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC", "Noto Sans SC", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Noto Color Emoji";
+  --ds-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* 字号：全部用 rem，跟随浏览器/系统字号设置（相当于 Web 版 Dynamic Type）。
+     层级参照 Apple iOS 默认 Large 档文字样式的相对比例，按 Web 正文 16px 换算并取整。 */
+  --ds-text-large-title: 2rem;      /* 32px  页面主标题（每页最多一个） */
+  --ds-text-title-1: 1.75rem;       /* 28px */
+  --ds-text-title-2: 1.375rem;      /* 22px  区块标题 */
+  --ds-text-title-3: 1.25rem;       /* 20px  卡片标题、弹窗标题 */
+  --ds-text-headline: 1rem;         /* 16px  加粗（600）的强调行 */
+  --ds-text-body: 1rem;             /* 16px  正文、输入框文字 */
+  --ds-text-callout: 0.9375rem;     /* 15px */
+  --ds-text-subhead: 0.875rem;      /* 14px  表格、次要信息 */
+  --ds-text-footnote: 0.8125rem;    /* 13px  脚注、表单帮助文字 */
+  --ds-text-caption: 0.75rem;       /* 12px  最小字号，中文不要再小 */
+
+  --ds-leading-tight: 1.25;         /* 标题 */
+  --ds-leading-normal: 1.5;         /* 界面文字 */
+  --ds-leading-relaxed: 1.7;        /* 中文长段落 */
+
+  --ds-weight-regular: 400;
+  --ds-weight-medium: 500;
+  --ds-weight-semibold: 600;
+  --ds-weight-bold: 700;
+
+  /* 间距：4px 基准网格 */
+  --ds-space-0: 0;
+  --ds-space-1: 0.25rem;  /* 4  */
+  --ds-space-2: 0.5rem;   /* 8  */
+  --ds-space-3: 0.75rem;  /* 12 */
+  --ds-space-4: 1rem;     /* 16 */
+  --ds-space-5: 1.25rem;  /* 20 */
+  --ds-space-6: 1.5rem;   /* 24 */
+  --ds-space-8: 2rem;     /* 32 */
+  --ds-space-10: 2.5rem;  /* 40 */
+  --ds-space-12: 3rem;    /* 48 */
+  --ds-space-16: 4rem;    /* 64 */
+
+  /* 控件尺寸 */
+  --ds-hit-min: 2.75rem;        /* 44px：触屏主要控件的点击区域（Apple 与 WCAG 2.5.5 AAA） */
+  --ds-hit-floor: 1.5rem;       /* 24px：任何情况下的底线（WCAG 2.5.8 AA） */
+  --ds-control-h-sm: 2rem;      /* 32px：仅限桌面密集表格内，且点击区域需扩展或留足间距 */
+  --ds-control-h-md: 2.75rem;   /* 44px：默认 */
+  --ds-control-h-lg: 3rem;      /* 48px：移动端主操作 */
+
+  /* 圆角：嵌套时内层 = 外层 - 内边距（同心圆角） */
+  --ds-radius-sm: 0.375rem;  /* 6  徽标、标签 */
+  --ds-radius-md: 0.5rem;    /* 8  按钮、输入框 */
+  --ds-radius-lg: 0.75rem;   /* 12 卡片、菜单 */
+  --ds-radius-xl: 1rem;      /* 16 弹窗、底部抽屉 */
+  --ds-radius-full: 9999px;
+
+  /* 动效 */
+  --ds-duration-instant: 100ms;  /* 按下、悬停颜色变化 */
+  --ds-duration-fast: 150ms;     /* 菜单、提示出现 */
+  --ds-duration-normal: 250ms;   /* 弹窗、抽屉 */
+  --ds-duration-slow: 350ms;     /* 页面级过渡（少用） */
+  --ds-duration-fade: 150ms;     /* 纯透明度变化；减少动态效果时也保留 */
+  --ds-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ds-ease-enter: cubic-bezier(0, 0, 0.2, 1);   /* 进入：减速 */
+  --ds-ease-exit: cubic-bezier(0.4, 0, 1, 1);    /* 退出：加速 */
+
+  /* 层级（z-index）：只能用这些值 */
+  --ds-z-base: 0;
+  --ds-z-sticky: 100;      /* 吸顶表头、顶栏 */
+  --ds-z-nav: 200;         /* 侧边栏、底部标签栏 */
+  --ds-z-dropdown: 300;    /* 下拉菜单、弹出框（非 top layer 实现时） */
+  --ds-z-overlay: 400;     /* 遮罩 */
+  --ds-z-modal: 500;       /* 弹窗、抽屉（用 <dialog>.showModal() 时进入 top layer，可不设） */
+  --ds-z-toast: 600;
+  --ds-z-tooltip: 700;
+
+  /* 内容宽度 */
+  --ds-content-max: 80rem;   /* 1280px 页面内容最大宽度 */
+  --ds-prose-max: 42rem;     /* 长文本最大行宽 */
+}
+
+/* ========== 5. 用户要求减少动态效果 ==========
+ * 做法（HIG Accessibility）：去掉位移、缩放、视差等运动，必要的状态变化改用淡入淡出。
+ * 组件写法：位移/缩放动画只写在 @media (prefers-reduced-motion: no-preference) 里
+ *（Tailwind 用 motion-safe: 前缀），透明度过渡使用 --ds-duration-fade。
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ds-duration-fast: 0ms;
+    --ds-duration-normal: 0ms;
+    --ds-duration-slow: 0ms;
+    /* --ds-duration-fade 保留，用于替代运动的淡入淡出 */
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ========== 6. 基础样式 ========== */
+html {
+  /* 不要给 html 设置 px 字号：那会覆盖用户在浏览器里调大的默认字号 */
+  font-family: var(--ds-font-sans);
+  line-height: var(--ds-leading-normal);
+  color: var(--ds-text);
+  background: var(--ds-canvas);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ds-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Windows 高对比度等强制颜色模式下，保证焦点和边框仍可见 */
+@media (forced-colors: active) {
+  :focus-visible { outline: 2px solid CanvasText; }
+}
+
+/* ========== 7. Tailwind CSS v4 映射（不用 Tailwind 时删除本区块） ==========
+ * 用 @theme inline 把语义令牌注册为工具类：bg-surface、text-fg-secondary、border-control……
+ * inline 让工具类直接引用 var(--ds-*)，深色模式切换时自动生效（Tailwind 文档《Theme variables》）。
+ * --color-*: initial 清空默认调色板，防止组件里出现 bg-blue-500 这类绕过令牌的写法。
+ */
+@theme inline {
+  --color-*: initial;
+  --color-canvas: var(--ds-canvas);
+  --color-surface: var(--ds-surface);
+  --color-elevated: var(--ds-elevated);
+  --color-sunken: var(--ds-sunken);
+  --color-fg: var(--ds-text);                    /* text-fg */
+  --color-fg-secondary: var(--ds-text-secondary); /* text-fg-secondary */
+  --color-fg-tertiary: var(--ds-text-tertiary);   /* text-fg-tertiary */
+  --color-separator: var(--ds-separator);
+  --color-control: var(--ds-border-control);
+  --color-accent: var(--ds-accent);
+  --color-accent-bg: var(--ds-accent-bg);
+  --color-accent-bg-hover: var(--ds-accent-bg-hover);
+  --color-on-accent: var(--ds-on-accent);
+  --color-accent-soft: var(--ds-accent-soft);
+  --color-danger: var(--ds-danger);
+  --color-danger-bg: var(--ds-danger-bg);
+  --color-on-danger: var(--ds-on-danger);
+  --color-danger-soft: var(--ds-danger-soft);
+  --color-success: var(--ds-success);
+  --color-success-soft: var(--ds-success-soft);
+  --color-warning: var(--ds-warning);
+  --color-warning-soft: var(--ds-warning-soft);
+  --color-focus: var(--ds-focus-ring);
+  --color-scrim: var(--ds-scrim);
+  --color-white: #fff;
+  --color-black: #000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-sans: var(--ds-font-sans);
+  --font-mono: var(--ds-font-mono);
+
+  --text-large-title: var(--ds-text-large-title);
+  --text-large-title--line-height: var(--ds-leading-tight);
+  --text-title-1: var(--ds-text-title-1);
+  --text-title-1--line-height: var(--ds-leading-tight);
+  --text-title-2: var(--ds-text-title-2);
+  --text-title-2--line-height: var(--ds-leading-tight);
+  --text-title-3: var(--ds-text-title-3);
+  --text-title-3--line-height: var(--ds-leading-tight);
+  --text-headline: var(--ds-text-headline);
+  --text-body: var(--ds-text-body);
+  --text-callout: var(--ds-text-callout);
+  --text-subhead: var(--ds-text-subhead);
+  --text-footnote: var(--ds-text-footnote);
+  --text-caption: var(--ds-text-caption);
+
+  --spacing: 0.25rem; /* p-1 = 4px, p-4 = 16px …与 4px 网格一致 */
+
+  --radius-sm: var(--ds-radius-sm);
+  --radius-md: var(--ds-radius-md);
+  --radius-lg: var(--ds-radius-lg);
+  --radius-xl: var(--ds-radius-xl);
+
+  --shadow-1: var(--ds-shadow-1);
+  --shadow-2: var(--ds-shadow-2);
+  --shadow-3: var(--ds-shadow-3);
+
+  --ease-standard: var(--ds-ease-standard);
+  --ease-enter: var(--ds-ease-enter);
+  --ease-exit: var(--ds-ease-exit);
+
+  /* 断点沿用 Tailwind 默认：sm 40rem / md 48rem / lg 64rem / xl 80rem / 2xl 96rem */
+}
